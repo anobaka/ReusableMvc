@@ -1,10 +1,15 @@
 # ReusableMvc
 
-Reuse controllers, actions, views and static files in one application with multiple pipelines
+Reuse controllers, actions, views and static files in one application with multiple pipelines.
+
+## Status
+
++ Under developing
++ Basic functions done.
 
 ## Overview
   
-**ReusableMvc** is a customized implementation of multi-tenant system, which is used to allow multiple areas to share and reuse **controllers**, **actions**, **views** and **static files**. And with <a href="https://github.com/LazyMortal/Multipipeline">Multipipeline</a> we can customize the pipelines of many similar systems.(e.g. different authentications)
+**ReusableMvc** is a customized implementation of multi-tenant system, which is used to allow multiple areas to share and reuse **controllers**, **actions**, **views** and **static files**. And with <a href="https://github.com/LazyMortal/Multipipeline">Multipipeline</a> we can customize the pipelines of many similar systems.(e.g. different authentications).
 
 ## Get Started
   
@@ -45,8 +50,8 @@ It generates url by current pipeline's name and the rule we set in `MapRoute`, y
 
 + #### Result  
     
-  + visit `http://domain/B/Test` will execute `A.HomeController.TestAction`
-  + `Url.Action("test", "home")` in `A.HomeController.TestAction` will generate url likes `/B/home/test`
+  + visit `http://domain/B/Test` will execute `A.HomeController.TestAction`.
+  + `Url.Action("test", "home")` in `A.HomeController.TestAction` will generate url likes `/B/home/test`.
 
 ## View Locator
   
@@ -61,7 +66,7 @@ It generates url by current pipeline's name and the rule we set in `MapRoute`, y
     + /Views/Shared/C/\{ViewName}.cshtml
     + /Views/Shared/D/\{ViewName}.cshtml
     + /Views/Shared/\{ViewName}.cshtml
-  + You can change the location template by setting `ViewLocationTemplate` in `ReusablePipeline`
+  + You can change the location template by setting `ViewLocationTemplate` in `ReusablePipeline`.
 
 ## Static Files Locator
 
@@ -71,7 +76,7 @@ It generates url by current pipeline's name and the rule we set in `MapRoute`, y
     + /wwwroot/{css/js}/\{controller}/c/\{viewName}.{css/js}
     + /wwwroot/{css/js}/\{controller}/d/\{viewName}.{css/js}
     + /wwwroot/{css/js}/\{controller}/\{viewName}.{css/js}
-  + You can change the location template by setting `StaticFilesLocationTemplate` in `ReusablePipeline`
+  + You can change the location template by setting `StaticFilesLocationTemplate` in `ReusablePipeline`.
 
 ## Customizing
 
@@ -81,16 +86,16 @@ It generates url by current pipeline's name and the rule we set in `MapRoute`, y
 
 ## Roadmap
 
-|Version|Release Date|
-|--------|:-----:|
-|1.0|2017.Q1|
+|Version|Release Date|Remark|
+|:-----:|:-----:|:-----:|
+|1.0|2017.Q1||
 
 ## TODO
 
   + Full test.
   + Router
     + Specific cross pipeline's level execution.
-      + If the relationship is A:B:C, we can specific some actions 
+      + If the relationship is A:B:C, we can make some actions skip B pipeline.
     + Attribute Router.
       + RouteAttribute
 
