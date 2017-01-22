@@ -7,12 +7,23 @@ namespace LazyMortal.ReusableMvc.Options
 	public class ReusableMvcOptions
 	{
 		/// <summary>
-		/// used for populating default static files stored in <see cref="HttpContext.Item"/>, default value is "ViewName"
+		/// The key in <see cref="HttpContext.Items"/> is used for transporting current viewname for finding default static files in , default value is "ViewName"
 		/// </summary>
 		public string ViewNameHttpContextItemKey { get; set; } = "ViewName";
 
+		/// <summary>
+		/// The default template key for route to generating urls.
+		/// </summary>
 		public string PipelineNameRouteDataKey { get; set; } = "area";
+
+		/// <summary>
+		/// The default view location template is: "/Views/{1}/{0}.cshtml"
+		/// </summary>
 		public string DefaultViewLocation { get; set; } = "/Views/{1}/{0}.cshtml";
+
+		/// <summary>
+		/// The default layout view location template is: "/Views/Shared/{0}.cshtml"
+		/// </summary>
 		public string DefaultLayoutLocation { get; set; } = "/Views/Shared/{0}.cshtml";
 	}
 }

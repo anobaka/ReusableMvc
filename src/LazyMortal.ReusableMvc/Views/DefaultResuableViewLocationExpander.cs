@@ -11,7 +11,7 @@ using LazyMortal.ReusableMvc.Pipelines;
 namespace LazyMortal.ReusableMvc.Views
 {
 	/// <summary>
-	/// 直接使用完整路径则不会进入ViewLocationExpander
+	///
 	/// </summary>
 	public class DefaultResuableViewLocationExpander : IReusableViewLocationExpander
 	{

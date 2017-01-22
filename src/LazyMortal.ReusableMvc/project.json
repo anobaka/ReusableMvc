@@ -1,17 +1,15 @@
 {
-  "version": "0.2.1",
+  "version": "0.2.3",
   "authors": [
     "Derrick"
   ],
-  "description": "",
   "dependencies": {
-    "LazyMortal.Multipipeline": "0.0.1-*",
+    "LazyMortal.Multipipeline": "0.0.2-*",
     "Microsoft.AspNetCore.Mvc": "1.1.0",
     "Microsoft.AspNetCore.Mvc.Razor": "1.1.0",
     "Microsoft.AspNetCore.Mvc.ViewFeatures": "1.1.0",
     "Microsoft.AspNetCore.Routing": "1.1.0"
   },
-
   "frameworks": {
     "netstandard1.6": {
       "dependencies": {
@@ -19,5 +17,8 @@
         "Microsoft.Extensions.DependencyInjection.Abstractions": "1.1.0"
       }
     }
+  },
+  "buildOptions": {
+    "xmlDoc": true
   }
 }

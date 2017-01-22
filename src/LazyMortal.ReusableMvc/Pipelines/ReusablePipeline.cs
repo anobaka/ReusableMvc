@@ -13,7 +13,6 @@ namespace LazyMortal.ReusableMvc.Pipelines
 	{
 		public abstract string Name { get; set; }
 		public abstract Task<bool> ResolveAsync(HttpContext ctx);
-
 		public abstract Task ConfigurePipeline(IApplicationBuilder app);
 
 		/// <summary>
