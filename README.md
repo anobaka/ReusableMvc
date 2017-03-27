@@ -2,6 +2,13 @@
 
 Reuse controllers, actions, views and static files within one application but different contexts.
 
+## Overview
+  
+**ReusableMvc** is a customized implementation of multi-tenant system, which is used to allow multiple areas to share and reuse **controllers**, **actions**, **views** and **static files**. And with <a href="https://github.com/LazyMortal/Multipipeline">Multipipeline</a> we can customize the pipelines of many similar systems.(e.g. different authentications).
+
+## Installation
++ <a href="https://www.nuget.org/packages/LazyMortal.ReusableMvc/">Nuget</a>
+
 ## Common Usages
 + Creating multiple UI skins applications.
 + Cooperators usually ask for many changes on the UI layer, with the core logic changing little.
@@ -11,9 +18,6 @@ Reuse controllers, actions, views and static files within one application but di
 
 + Basic functions have been finished.
 
-## Overview
-  
-**ReusableMvc** is a customized implementation of multi-tenant system, which is used to allow multiple areas to share and reuse **controllers**, **actions**, **views** and **static files**. And with <a href="https://github.com/LazyMortal/Multipipeline">Multipipeline</a> we can customize the pipelines of many similar systems.(e.g. different authentications).
 
 ## Get Started
   
