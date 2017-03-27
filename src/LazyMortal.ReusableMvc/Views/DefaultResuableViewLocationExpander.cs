@@ -11,7 +11,7 @@ using LazyMortal.ReusableMvc.Pipelines;
 namespace LazyMortal.ReusableMvc.Views
 {
 	/// <summary>
-	///
+	/// Default view locator.
 	/// </summary>
 	public class DefaultResuableViewLocationExpander : IReusableViewLocationExpander
 	{
@@ -25,9 +25,7 @@ namespace LazyMortal.ReusableMvc.Views
 			_pipelineDecisionTree = pipelineDecisionTree;
 		}
 
-		/// <summary>
-		/// 每次查找View都会调用该方法
-		/// </summary>
+		///<inheritdoc cref="IViewLocationExpander.PopulateValues"/>
 		public virtual void PopulateValues(ViewLocationExpanderContext context)
 		{
 			if (context.IsMainPage)
@@ -37,8 +35,9 @@ namespace LazyMortal.ReusableMvc.Views
 		}
 
 		/// <summary>
-		/// 没有view路径缓存时调用该方法查找view
-		/// 规则1：所有View路径大小写与Controller以及ViewName一致
+		/// <para>The cases of controller and view part in view location are case sensitive, and same as the original name.</para>
+		/// <para>e.g. The part of 'ProductController' in view location is 'Product'</para>
+		/// <para>e.g. The part of view name 'Partial/Index' in view location is 'Partial/Index'</para>
 		/// </summary>
 		public virtual IEnumerable<string> ExpandViewLocations(ViewLocationExpanderContext context,
 			IEnumerable<string> viewLocations)

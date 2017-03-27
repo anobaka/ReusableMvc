@@ -14,8 +14,18 @@ namespace LazyMortal.ReusableMvc.Routes
 	/// </summary>
 	public interface IReusableRouter : IRouter
 	{
-		void ChangeRouteDataToLocateAction(RouteContext context, ReusablePipeline pipeline);
+		/// <summary>
+		/// Temporary change current route data for invoking the action located by reusable rules, and then the route data will be restored.
+		/// </summary>
+		/// <param name="context"></param>
+		/// <param name="pipeline"></param>
+		void ChangeRouteDataToLocatedAction(RouteContext context, ReusablePipeline pipeline);
 
+		/// <summary>
+		/// Restore the route data.
+		/// </summary>
+		/// <param name="context"></param>
+		/// <param name="pipeline"></param>
 		void RestoreRouteData(RouteContext context, ReusablePipeline pipeline);
 	}
 }

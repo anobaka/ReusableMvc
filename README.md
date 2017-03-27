@@ -1,11 +1,15 @@
 # ReusableMvc
 
-Reuse controllers, actions, views and static files in one application with multiple pipelines.
+Reuse controllers, actions, views and static files within one application but different contexts.
+
+## Common Usages
++ Creating multiple UI skins applications.
++ Cooperators usually ask for many changes on the UI layer, with the core logic changing little.
++ ...
 
 ## Status
 
-+ Under developing
-+ Basic functions done.
++ Basic functions have been finished.
 
 ## Overview
   
@@ -35,48 +39,58 @@ Reuse controllers, actions, views and static files in one application with multi
 
 ### Action Locator
 
-If a pipeline has parent, the router will try to find the its parents' actions one by one(including itself) until the router find a suitable action for current uri, and then excute the action.
+If a pipeline has a parent, the router will try to find the its parents' actions one by one(including itself) until the router find a suitable action for current uri, and then excute the action.
 
 ### Url Generator
 
-It generates url by current pipeline's name and the rule we set in `MapRoute`, you can change that by setting mvc's route template and the `ControllerFullNameTemplate` in `ReusablePipeline`.
+It generates url by current pipeline's **name** and the rule we set in `MapRoute`, you can change that by setting mvc's route template and the `ControllerFullNameTemplate` in `ReusablePipeline`.
 
 ### Sample
 
 + #### Workground
   
-  + APipeline + A.HomeController.TestAction
-  + BPipeline : APipeline + B has no controller
+  + **APipeline** and there is an action **A.HomeController.TestAction**.
+  + **BPipeline**(inherited from APipeline) and there is no action.
 
 + #### Result  
     
-  + visit `http://domain/B/Test` will execute `A.HomeController.TestAction`.
-  + `Url.Action("test", "home")` in `A.HomeController.TestAction` will generate url likes `/B/home/test`.
+  + When we request `http://domain/B/Test`, the program will execute `A.HomeController.TestAction`.
+  + When we use `Url.Action("test", "home")` in `A.HomeController.TestAction`, it will generate url likes `/B/home/test`.
 
 ## View Locator
-  
-  + If pipelines' relationship is A : B : C : D, then the default priority of view's locations is:
-    + /Views/\{Controller}/A/\{ViewName}.cshtml
-    + /Views/\{Controller}/B/\{ViewName}.cshtml
-    + /Views/\{Controller}/C/\{ViewName}.cshtml
-    + /Views/\{Controller}/D/\{ViewName}.cshtml
-    + /Views/\{Controller}/\{ViewName}.cshtml
-    + /Views/Shared/A/\{ViewName}.cshtml
-    + /Views/Shared/B/\{ViewName}.cshtml
-    + /Views/Shared/C/\{ViewName}.cshtml
-    + /Views/Shared/D/\{ViewName}.cshtml
-    + /Views/Shared/\{ViewName}.cshtml
-  + You can change the location template by setting `ViewLocationTemplate` in `ReusablePipeline`.
+
+### Default Behavior
+
+If pipelines' relationship is A : B : C : D, then the default priority of view's locations is:
+  + /Views/\{Controller}/A/\{ViewName}.cshtml
+  + /Views/\{Controller}/B/\{ViewName}.cshtml
+  + /Views/\{Controller}/C/\{ViewName}.cshtml
+  + /Views/\{Controller}/D/\{ViewName}.cshtml
+  + /Views/\{Controller}/\{ViewName}.cshtml
+  + /Views/Shared/A/\{ViewName}.cshtml
+  + /Views/Shared/B/\{ViewName}.cshtml
+  + /Views/Shared/C/\{ViewName}.cshtml
+  + /Views/Shared/D/\{ViewName}.cshtml
+  + /Views/Shared/\{ViewName}.cshtml
+
+### Customizing
+
+You can change the location template by setting `ViewLocationTemplate` in `ReusablePipeline`.
 
 ## Static Files Locator
 
-  + If pipelines' relationship is A : B : C : D, then the default priority of static files' locations is:
-    + /wwwroot/{css/js}/\{controller}/a/\{viewName}.{css/js}
-    + /wwwroot/{css/js}/\{controller}/b/\{viewName}.{css/js}
-    + /wwwroot/{css/js}/\{controller}/c/\{viewName}.{css/js}
-    + /wwwroot/{css/js}/\{controller}/d/\{viewName}.{css/js}
-    + /wwwroot/{css/js}/\{controller}/\{viewName}.{css/js}
-  + You can change the location template by setting `StaticFilesLocationTemplate` in `ReusablePipeline`.
+### Default Behavior
+
+If pipelines' relationship is A : B : C : D, then the default priority of static files' locations is:
++ /wwwroot/{css/js}/\{controller}/a/\{viewName}.{css/js}
++ /wwwroot/{css/js}/\{controller}/b/\{viewName}.{css/js}
++ /wwwroot/{css/js}/\{controller}/c/\{viewName}.{css/js}
++ /wwwroot/{css/js}/\{controller}/d/\{viewName}.{css/js}
++ /wwwroot/{css/js}/\{controller}/\{viewName}.{css/js}
+
+### Customizing
+
+You can change the location template by setting `StaticFilesLocationTemplate` in `ReusablePipeline`.
 
 ## Customizing
 
@@ -88,14 +102,14 @@ It generates url by current pipeline's name and the rule we set in `MapRoute`, y
 
 |Version|Release Date|Remark|
 |:-----:|:-----:|:-----:|
-|1.0|2017.Q1||
+|1.0|TBD||
 
 ## TODO
 
   + Full test.
   + Router
     + Specific cross pipeline's level execution.
-      + If the relationship is A:B:C, we can make some actions skip B pipeline.
+      + If the relationship is A:B:C, we can make some actions skip B pipeline(If it hits B pipeline by default).
     + Attribute Router.
       + RouteAttribute
 

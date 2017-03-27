@@ -25,15 +25,6 @@ namespace Sample.Web
 				.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
 				.AddEnvironmentVariables();
 
-			if (env.IsDevelopment())
-			{
-				if (env.IsDevelopment())
-				{
-					// This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
-					builder.AddApplicationInsightsSettings(developerMode: true);
-				}
-			}
-
 			Configuration = builder.Build();
 		}
 
@@ -42,8 +33,6 @@ namespace Sample.Web
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddReusableMvcWithDefaultStaticFiles();
-
-			services.AddApplicationInsightsTelemetry();
 		}
 
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
@@ -63,13 +52,7 @@ namespace Sample.Web
 
 			app.UseStaticFiles();
 
-			app.AddMultipipeline(t =>
-			{
-				t.Use(async (ctx, next) =>
-				{
-					await next();
-				});
-			});
+			app.AddMultipipeline();
 
 			app.UseReusableMvcWithDefaultRoute();
 		}

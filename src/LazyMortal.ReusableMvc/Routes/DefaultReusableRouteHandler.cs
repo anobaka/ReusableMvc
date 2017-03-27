@@ -53,7 +53,7 @@ namespace LazyMortal.ReusableMvc.Routes
 			var pipeline = context.HttpContext.GetPipeline() as ReusablePipeline;
 			if (pipeline != null)
 			{
-				ChangeRouteDataToLocateAction(context, pipeline);
+				ChangeRouteDataToLocatedAction(context, pipeline);
 			}
 			try
 			{
@@ -73,7 +73,7 @@ namespace LazyMortal.ReusableMvc.Routes
 			return null;
 		}
 
-		public virtual void ChangeRouteDataToLocateAction(RouteContext context, ReusablePipeline pipeline)
+		public virtual void ChangeRouteDataToLocatedAction(RouteContext context, ReusablePipeline pipeline)
 		{
 			var actionName = context.RouteData.Values["action"].ToString();
 			var controllerName = context.RouteData.Values["controller"].ToString();

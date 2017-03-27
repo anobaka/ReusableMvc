@@ -18,7 +18,8 @@ namespace LazyMortal.ReusableMvc.Extensions
 	public static class ReusableMvcApplicationBuilderExtensions
 	{
 		/// <summary>
-		/// Default route is {area}/{controller=Home}/{action=Index}/{id?}, and the default route is {controller=Home}/{action=Index}/{id?}
+		/// <para>Default route is {area}/{controller=Home}/{action=Index}/{id?}, and the default route is {controller=Home}/{action=Index}/{id?}.</para>
+		/// <para>Use <see cref="UseReusableMvc"/> for more route configurations.</para>
 		/// </summary>
 		/// <param name="app"></param>
 		/// <returns></returns>
@@ -29,7 +30,7 @@ namespace LazyMortal.ReusableMvc.Extensions
 			{
 				routes.MapRoute(
 					name: "reusable",
-					template: $"{options.Value.PipelineNameRouteDataKey}/{{controller=Home}}/{{action=Index}}/{{id?}}");
+					template: $"{{{options.Value.PipelineNameRouteDataKey}}}/{{controller=Home}}/{{action=Index}}/{{id?}}");
 				routes.MapRoute(
 					name: "default",
 					template: "{controller=Home}/{action=Index}/{id?}");

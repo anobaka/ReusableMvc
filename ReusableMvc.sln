@@ -13,8 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "LazyMortal.ReusableMvc", "src\LazyMortal.ReusableMvc\LazyMortal.ReusableMvc.xproj", "{4D7626CE-DB92-4F74-80DD-5AC907AE1756}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "LazyMortal.Multipipeline", "..\Multipipeline\src\LazyMortal.Multipipeline\LazyMortal.Multipipeline.xproj", "{81A94E14-B026-45FE-AF22-6E6E5E20B99C}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{8F91CADF-4840-4353-B0A0-5888A2CD6642}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Sample.Web", "samples\Sample.Web\Sample.Web.xproj", "{E5555CA8-F2ED-4E32-B110-E2614918A2D5}"
@@ -29,10 +27,6 @@ Global
 		{4D7626CE-DB92-4F74-80DD-5AC907AE1756}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D7626CE-DB92-4F74-80DD-5AC907AE1756}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D7626CE-DB92-4F74-80DD-5AC907AE1756}.Release|Any CPU.Build.0 = Release|Any CPU
-		{81A94E14-B026-45FE-AF22-6E6E5E20B99C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{81A94E14-B026-45FE-AF22-6E6E5E20B99C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{81A94E14-B026-45FE-AF22-6E6E5E20B99C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{81A94E14-B026-45FE-AF22-6E6E5E20B99C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E5555CA8-F2ED-4E32-B110-E2614918A2D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E5555CA8-F2ED-4E32-B110-E2614918A2D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E5555CA8-F2ED-4E32-B110-E2614918A2D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
