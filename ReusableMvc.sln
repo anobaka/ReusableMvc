@@ -1,21 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{ED400B4C-9B62-4A71-A36F-766283D74AF5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9579D63C-5E63-4AD5-BAB4-41486A5A2616}"
 	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "LazyMortal.ReusableMvc", "src\LazyMortal.ReusableMvc\LazyMortal.ReusableMvc.xproj", "{4D7626CE-DB92-4F74-80DD-5AC907AE1756}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{8F91CADF-4840-4353-B0A0-5888A2CD6642}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Sample.Web", "samples\Sample.Web\Sample.Web.xproj", "{E5555CA8-F2ED-4E32-B110-E2614918A2D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LazyMortal.ReusableMvc", "src\LazyMortal.ReusableMvc\LazyMortal.ReusableMvc.csproj", "{4D7626CE-DB92-4F74-80DD-5AC907AE1756}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Web", "samples\Sample.Web\Sample.Web.csproj", "{E5555CA8-F2ED-4E32-B110-E2614918A2D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

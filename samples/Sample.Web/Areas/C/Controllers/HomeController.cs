@@ -2,8 +2,8 @@
 
 namespace Sample.Web.Areas.C.Controllers
 {
-	[Area("c")]
-	public class HomeController : Controller
+    [Area("c")]
+    public class HomeController : Controller
     {
         public IActionResult Index()
         {

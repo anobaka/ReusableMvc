@@ -20,7 +20,7 @@ namespace LazyMortal.ReusableMvc.Routes
 	public class DefaultReusableRouteHandler : IReusableRouter
 	{
 		private readonly IRouter _target;
-		private readonly IDictionary<string, IEnumerable<string>> _controllerActionNames;
+		private readonly IDictionary<string, IEnumerable<string>> _controllerActionUris;
 		private readonly PipelineDecisionTree _pipelineDecisionTree;
 		private readonly string _projectBaseNameSpace;
 		private readonly IOptions<ReusableMvcOptions> _options;
@@ -36,11 +36,14 @@ namespace LazyMortal.ReusableMvc.Routes
 			_target = target;
 			_pipelineDecisionTree = pipelineDecisionTree;
 			_options = options;
-			_controllerActionNames =
-				actionProvider.ActionDescriptors.Items.Cast<ControllerActionDescriptor>()
-					.GroupBy(t => t.ControllerTypeInfo.FullName)
-					.ToDictionary(t => t.Key, t => t.Select(t1 => t1.ActionName), StringComparer.OrdinalIgnoreCase);
-			_projectBaseNameSpace = Assembly.GetEntryAssembly().GetName().Name;
+		    _controllerActionUris =
+		        actionProvider.ActionDescriptors.Items.Cast<ControllerActionDescriptor>()
+		            .GroupBy(t => t.ControllerTypeInfo.FullName)
+		            .ToDictionary(t => t.Key,
+		                t => t.Select(x => (x.AttributeRouteInfo != null
+		                    ? x.AttributeRouteInfo.Template
+		                    : $"{t.Key}/{x.ActionName}").Trim('/')), StringComparer.OrdinalIgnoreCase);
+		    _projectBaseNameSpace = Assembly.GetEntryAssembly().GetName().Name;
 		}
 
 		/// <summary>
@@ -75,21 +78,21 @@ namespace LazyMortal.ReusableMvc.Routes
 
 		public virtual void ChangeRouteDataToLocatedAction(RouteContext context, ReusablePipeline pipeline)
 		{
-			var actionName = context.RouteData.Values["action"].ToString();
+		    var uri = context.HttpContext.Request.Path.Value.Trim('/');
 			var controllerName = context.RouteData.Values["controller"].ToString();
 			var targetPipeline = _pipelineActions.GetOrAdd(pipeline,
 					t => new ConcurrentDictionary<string, ConcurrentDictionary<string, IPipeline>>(StringComparer.OrdinalIgnoreCase))
 				.GetOrAdd(controllerName, t => new ConcurrentDictionary<string, IPipeline>(StringComparer.OrdinalIgnoreCase))
-				.GetOrAdd(actionName, t1 =>
+				.GetOrAdd(uri, t1 =>
 				{
 					var pipelinePath = _pipelineDecisionTree.GetPipelinePath(pipeline);
 					foreach (var p in pipelinePath)
 					{
 						var fullControllerName = string.Format(p.ControllerFullNameTemplate, _projectBaseNameSpace, controllerName);
-						IEnumerable<string> actionNames;
-						if (_controllerActionNames.TryGetValue(fullControllerName, out actionNames))
+						IEnumerable<string> uris;
+						if (_controllerActionUris.TryGetValue(fullControllerName, out uris))
 						{
-							if (actionNames.Contains(actionName, StringComparer.OrdinalIgnoreCase))
+							if (uris.Contains(uri, StringComparer.OrdinalIgnoreCase))
 							{
 								return p;
 							}

@@ -106,6 +106,7 @@ You can change the location template by setting `StaticFilesLocationTemplate` in
 
 |Version|Release Date|Remark|
 |:-----:|:-----:|:-----:|
+|0.2.4|2017-06-29|Add support for MVC Route|
 |1.0|TBD||
 
 ## TODO

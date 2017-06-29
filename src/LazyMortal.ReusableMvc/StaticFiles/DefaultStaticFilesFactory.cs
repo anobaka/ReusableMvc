@@ -36,7 +36,7 @@ namespace LazyMortal.ReusableMvc.StaticFiles
 
 		public DefaultStaticFilesFactory(IOptions<ReusableMvcOptions> options,
 			IRazorViewEngineFileProviderAccessor fileProviderAccessor,
-			PipelineDecisionTree pipelineDecisionTree, IHostingEnvironment env, IHttpContextAccessor httpContextAccessor,
+			PipelineDecisionTree pipelineDecisionTree, IHostingEnvironment env,
 			IActionContextAccessor actionContextAccessor)
 		{
 			_options = options;

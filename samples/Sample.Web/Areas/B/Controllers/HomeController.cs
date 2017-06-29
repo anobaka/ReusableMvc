@@ -2,8 +2,8 @@
 
 namespace Sample.Web.Areas.B.Controllers
 {
-	[Area("b")]
-	public class HomeController : Controller
+    [Area("b")]
+    public class HomeController : Controller
     {
 
     }
