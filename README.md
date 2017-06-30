@@ -104,9 +104,9 @@ You can change the location template by setting `StaticFilesLocationTemplate` in
 
 ## Roadmap
 
-|Version|Release Date|Remark|
+|Version|Release Date|Release Note|
 |:-----:|:-----:|:-----:|
-|0.2.4|2017-06-29|Upgrade project file to csproj and Add support for MVC Route|
+|0.2.4|2017-06-29|Upgrade project file to csproj and add support for MVC Route|
 |1.0|TBD||
 
 ## TODO
@@ -115,8 +115,6 @@ You can change the location template by setting `StaticFilesLocationTemplate` in
   + Router
     + Specific cross pipeline's level execution.
       + If the relationship is A:B:C, we can make some actions skip B pipeline(If it hits B pipeline by default).
-    + Attribute Router.
-      + RouteAttribute
 
 ## Contribution
 
