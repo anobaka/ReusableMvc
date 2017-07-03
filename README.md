@@ -107,6 +107,7 @@ You can change the location template by setting `StaticFilesLocationTemplate` in
 |Version|Release Date|Release Note|
 |:-----:|:-----:|:-----:|
 |0.2.4|2017-06-29|Upgrade project file to csproj and add support for MVC Route|
+|0.2.5|2017-07-03|Change return types of methods in `ServiceCollection` Extensions from `IServiceCollection` to `IMvcBuilder`|
 |1.0|TBD||
 
 ## TODO

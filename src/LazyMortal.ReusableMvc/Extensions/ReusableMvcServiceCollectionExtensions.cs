@@ -15,14 +15,14 @@ namespace LazyMortal.ReusableMvc.Extensions
 {
 	public static class ReusableMvcServiceCollectionExtensions
 	{
-		public static IServiceCollection AddReusableMvcWithDefaultStaticFiles(this IServiceCollection services,
+		public static IMvcBuilder AddReusableMvcWithDefaultStaticFiles(this IServiceCollection services,
 			Action<ReusableMvcOptions> reusableMvcOptionsAction = null, Action<MvcOptions> mvcSetupOptions = null)
 		{
 			return services.AddReusableMvc<DefaultStaticFiles, DefaultStaticFilesFactory>(reusableMvcOptionsAction,
 				mvcSetupOptions);
 		}
 
-		public static IServiceCollection AddReusableMvc<TStaticFiles, TStaticFilesFactory>(this IServiceCollection services,
+		public static IMvcBuilder AddReusableMvc<TStaticFiles, TStaticFilesFactory>(this IServiceCollection services,
 			Action<ReusableMvcOptions> reusableMvcOptionsAction = null, Action<MvcOptions> mvcSetupOptions = null)
 			where TStaticFilesFactory : class, IStaticFilesFactory<TStaticFiles> where TStaticFiles : class
 		{
@@ -37,8 +37,7 @@ namespace LazyMortal.ReusableMvc.Extensions
 			services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
 			services.TryAddSingleton<IReusableRouter, DefaultReusableRouteHandler>();
 
-			services.AddMvc(mvcSetupOptions ?? (t => { }));
-			return services;
+		    return mvcSetupOptions != null ? services.AddMvc(mvcSetupOptions) : services.AddMvc();
 		}
 	}
 }

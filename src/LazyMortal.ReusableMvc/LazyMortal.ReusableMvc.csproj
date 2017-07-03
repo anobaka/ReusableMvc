@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>Reuse controllers, actions, views and static files within one application but different contexts.</Description>
     <AssemblyTitle>LazyMortal.ReusableMvc</AssemblyTitle>
-    <VersionPrefix>0.2.3</VersionPrefix>
+    <VersionPrefix>0.2.5</VersionPrefix>
     <Authors>Derrick</Authors>
     <TargetFramework>netstandard1.6</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -16,9 +16,9 @@
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <Version>0.2.4</Version>
+    <Version>0.2.5</Version>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageReleaseNotes>Add support for mvc routing</PackageReleaseNotes>
+    <PackageReleaseNotes>Change return types of methods in `ServiceCollection` Extensions from `IServiceCollection` to `IMvcBuilder`</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
