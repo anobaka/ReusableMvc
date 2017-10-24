@@ -1,55 +1,85 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using LazyMortal.Multipipeline;
 using LazyMortal.ReusableMvc.Options;
+using LazyMortal.ReusableMvc.StaticFiles;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Routing;
 
 namespace LazyMortal.ReusableMvc.Pipelines
 {
-	public abstract class ReusablePipeline : IPipeline
-	{
-		/// <inheritDoc/>
-		public abstract string Name { get; set; }
-		/// <inheritDoc/>
-		public abstract Task<bool> ResolveAsync(HttpContext ctx);
-		/// <inheritDoc/>
-		public abstract Task ConfigurePipeline(IApplicationBuilder app);
+    /// <summary>
+    /// Default abstract reusable pipeline, but not standard.
+    /// </summary>
+    public abstract class ReusablePipeline : IReusablePipeline
+    {
+        public string Id { get; }
+        public string ParentId { get; }
+        public string Name { get; }
 
-		/// <summary>
-		/// used for finding current pipeline's controller for current request.
-		/// <para>{0} is for project's base namespace</para>
-		/// <para>{1} is for controller's name trimed end with 'Controller'</para>
-		/// <para>{2} is for pipeline's name</para>
-		/// <para>default value is "{0}.Areas.{1}.Controllers.{2}"</para>
-		/// </summary>
-		public string ControllerFullNameTemplate { get; set; } = "{0}.Areas.{2}.Controllers.{1}Controller";
+        protected static readonly string ProjectBaseNamespace = Assembly.GetEntryAssembly().GetName().Name;
 
-		/// <summary>
-		/// used for finding current pipeline's view for current request
-		/// <para>{0} is for view's name</para>
-		/// <para>{1} is for controller's name</para>
-		/// <para>{2} is for pipeline's name</para>
-		/// <para>default value is "/Views/{1}{2}{0}.cshtml", the "//" will be replaced by "/" if the value is null</para>
-		/// </summary>
-		public string ViewLocationTemplate { get; set; } = "/Views/{1}/{2}/{0}.cshtml";
+        protected ReusableMvcOptions ReusableMvcOptions;
 
-		/// <summary>
-		/// used for finding current pipeline'sstatic files for current request
-		/// <para>{0} is for view's name</para>
-		/// <para>{1} is for controller's name</para>
-		/// <para>{2} is for pipeline's name.ToLower()</para>
-		/// <para>default value is "{1}/{2}/{0}", the "//" will be replaced by "/" if the value is null</para>
-		/// </summary>
-		public string StaticFilesLocationTemplate { get; set; } = "{1}/{2}/{0}";
+        protected ReusablePipeline(ReusablePipelineOptions options, ReusableMvcOptions reusableMvcOptions)
+        {
+            Id = options.Id;
+            ParentId = options.ParentId;
+            Name = options.Name;
+            ReusableMvcOptions = reusableMvcOptions;
+        }
 
-		/// <summary>
-		/// used for finding layout of this pipeline
-		/// <para>{0} is for view's name</para>
-		/// <para>{1} is for pipeline's name</para>
-		/// </summary>
-		public string SharedViewLocationTemplate { get; set; } = "/Views/Shared/{1}/{0}.cshtml";
-	}
+        public abstract Task<bool> ResolveAsync(HttpContext ctx);
+
+        public abstract Task ConfigurePipeline(IApplicationBuilder app);
+
+        public virtual List<string> GetControllerFullnames(RouteContext routeContext)
+        {
+            var controllerName = routeContext.RouteData.Values["controller"].ToString();
+            return new List<string> {$"{ProjectBaseNamespace}.Areas.{Name}.Controllers.{controllerName}Controller"};
+        }
+
+        public virtual List<string> GetViewLocations(ViewLocationExpanderContext viewLocationExpanderContext)
+        {
+            var pipelineName =
+                (viewLocationExpanderContext.ActionContext.HttpContext.GetPipeline() as IReusablePipeline)?.Name;
+            return new List<string> {$"/Views/{{1}}/{pipelineName}/{{0}}.cshtml".Replace("//", "/")};
+        }
+
+        public virtual List<string> GetSharedViewLocations(ViewLocationExpanderContext viewLocationExpanderContext)
+        {
+            var pipelineName =
+                (viewLocationExpanderContext.ActionContext.HttpContext.GetPipeline() as IReusablePipeline)?.Name;
+            return new List<string> {$"/Views/Shared/{pipelineName}/{{0}}.cshtml".Replace("//", "/")};
+        }
+
+        public virtual List<string> GetStaticFilesRelativeLocations(ActionContext actionContext)
+        {
+            var controllerName = (actionContext.RouteData.Values["controller"] as string)?.ToLower();
+            var viewName = (actionContext.HttpContext.Items[ReusableMvcOptions.ViewNameHttpContextItemKey] as string)
+                ?.ToLower();
+            return new List<string> {$"{controllerName}/{Name}/{viewName}"};
+        }
+    }
+
+    public abstract class ReusablePipeline<TOptions, TMvcOptions> : ReusablePipeline
+        where TOptions : ReusablePipelineOptions where TMvcOptions : ReusableMvcOptions
+    {
+        protected ReusablePipeline(TOptions options, TMvcOptions reusableMvcOptions) : base(
+            options, reusableMvcOptions)
+        {
+            Options = options;
+        }
+
+        protected new TMvcOptions ReusableMvcOptions;
+
+        protected TOptions Options;
+    }
 }

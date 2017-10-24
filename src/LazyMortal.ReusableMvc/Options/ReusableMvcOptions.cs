@@ -25,5 +25,9 @@ namespace LazyMortal.ReusableMvc.Options
 		/// The default layout view location template is: "/Views/Shared/{0}.cshtml"
 		/// </summary>
 		public string DefaultLayoutLocation { get; set; } = "/Views/Shared/{0}.cshtml";
+        /// <summary>
+        /// The default static file location template is: "{1}/{0}.cshtml"
+        /// </summary>
+	    public string DefaultStaticFileLocation { get; set; } = "{1}/{0}";
 	}
 }

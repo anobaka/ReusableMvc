@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LazyMortal.ReusableMvc.Options;
+using LazyMortal.ReusableMvc.Pipelines;
 
 namespace Sample.Web.Models
 {
     public class BPipeline : APipeline
     {
-	    public override string Name { get; set; } = "B";
+        public BPipeline(ReusablePipelineOptions options, ReusableMvcOptions reusableMvcOptions) : base(options,
+            reusableMvcOptions)
+        {
+        }
     }
 }

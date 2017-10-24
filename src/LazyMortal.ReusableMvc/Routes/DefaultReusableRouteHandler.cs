@@ -22,7 +22,7 @@ namespace LazyMortal.ReusableMvc.Routes
 		private readonly IRouter _target;
 		private readonly IDictionary<string, IEnumerable<string>> _controllerActionUris;
 		private readonly PipelineDecisionTree _pipelineDecisionTree;
-		private readonly string _projectBaseNameSpace;
+		//private readonly string _projectBaseNameSpace;
 		private readonly IOptions<ReusableMvcOptions> _options;
 
 		private readonly
@@ -43,7 +43,7 @@ namespace LazyMortal.ReusableMvc.Routes
 		                t => t.Select(x => (x.AttributeRouteInfo != null
 		                    ? x.AttributeRouteInfo.Template
 		                    : $"{t.Key}/{x.ActionName}").Trim('/')), StringComparer.OrdinalIgnoreCase);
-		    _projectBaseNameSpace = Assembly.GetEntryAssembly().GetName().Name;
+		    //_projectBaseNameSpace = Assembly.GetEntryAssembly().GetName().Name;
 		}
 
 		/// <summary>
@@ -88,15 +88,17 @@ namespace LazyMortal.ReusableMvc.Routes
 					var pipelinePath = _pipelineDecisionTree.GetPipelinePath(pipeline);
 					foreach (var p in pipelinePath)
 					{
-						var fullControllerName = string.Format(p.ControllerFullNameTemplate, _projectBaseNameSpace, controllerName);
-						IEnumerable<string> uris;
-						if (_controllerActionUris.TryGetValue(fullControllerName, out uris))
-						{
-							if (uris.Contains(uri, StringComparer.OrdinalIgnoreCase))
-							{
-								return p;
-							}
-						}
+						var fullControllerNames = p.GetControllerFullnames(context);
+					    foreach (var fullControllerName in fullControllerNames)
+					    {
+					        if (_controllerActionUris.TryGetValue(fullControllerName, out var uris))
+					        {
+					            if (uris.Contains(uri, StringComparer.OrdinalIgnoreCase))
+					            {
+					                return p;
+					            }
+					        }
+					    }
 					}
 					return null;
 				});

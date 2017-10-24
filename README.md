@@ -1,5 +1,7 @@
 # ReusableMvc
 
+**This document has expired, please wait for updating.**
+
 Reuse controllers, actions, views and static files within one application but different contexts.
 
 ## Overview
@@ -104,11 +106,10 @@ You can change the location template by setting `StaticFilesLocationTemplate` in
 
 ## Roadmap
 
-|Version|Release Date|Release Note|
+|Version|Release Date|Remark|
 |:-----:|:-----:|:-----:|
-|0.2.4|2017-06-29|Upgrade project file to csproj and add support for MVC Route|
-|0.2.5|2017-07-03|Change return types of methods in `ServiceCollection` extensions from `IServiceCollection` to `IMvcBuilder`|
-|1.0|TBD||
+|0.2.4|2017-06-29|Add support for MVC Route|
+|0.3.0-beta|2017-10-24|Redesign|
 
 ## TODO
 
@@ -116,6 +117,8 @@ You can change the location template by setting `StaticFilesLocationTemplate` in
   + Router
     + Specific cross pipeline's level execution.
       + If the relationship is A:B:C, we can make some actions skip B pipeline(If it hits B pipeline by default).
+    + Attribute Router.
+      + RouteAttribute
 
 ## Contribution
 

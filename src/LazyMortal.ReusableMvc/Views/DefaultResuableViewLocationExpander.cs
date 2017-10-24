@@ -10,6 +10,7 @@ using LazyMortal.ReusableMvc.Pipelines;
 
 namespace LazyMortal.ReusableMvc.Views
 {
+	/// <inheritdoc />
 	/// <summary>
 	/// Default view locator.
 	/// </summary>
@@ -18,7 +19,8 @@ namespace LazyMortal.ReusableMvc.Views
 		private readonly IOptions<ReusableMvcOptions> _options;
 		private readonly PipelineDecisionTree _pipelineDecisionTree;
 
-		public DefaultResuableViewLocationExpander(IOptions<ReusableMvcOptions> options,
+	    /// <inheritdoc />
+	    public DefaultResuableViewLocationExpander(IOptions<ReusableMvcOptions> options,
 			PipelineDecisionTree pipelineDecisionTree)
 		{
 			_options = options;
@@ -34,6 +36,7 @@ namespace LazyMortal.ReusableMvc.Views
 			}
 		}
 
+		/// <inheritdoc />
 		/// <summary>
 		/// <para>The cases of controller and view part in view location are case sensitive, and same as the original name.</para>
 		/// <para>e.g. The part of 'ProductController' in view location is 'Product'</para>
@@ -42,18 +45,23 @@ namespace LazyMortal.ReusableMvc.Views
 		public virtual IEnumerable<string> ExpandViewLocations(ViewLocationExpanderContext context,
 			IEnumerable<string> viewLocations)
 		{
-			var pipeline = context.ActionContext.HttpContext.GetPipeline() as ReusablePipeline;
-			if (pipeline != null)
+		    if (context.ActionContext.HttpContext.GetPipeline() is ReusablePipeline pipeline)
 			{
 				var pipelinePath = _pipelineDecisionTree.GetPipelinePath(pipeline);
 				//main view
-				var tmpViewLocations = pipelinePath.Select(p => p.ViewLocationTemplate).ToList();
-				tmpViewLocations.Add(_options.Value.DefaultViewLocation);
+				var tmpViewLocations = pipelinePath.SelectMany(p => p.GetSharedViewLocations(context)).ToList();
+			    if (!string.IsNullOrEmpty(_options.Value.DefaultViewLocation))
+			    {
+			        tmpViewLocations.Add(_options.Value.DefaultViewLocation);
+                }
 				//shared view
-				tmpViewLocations.AddRange(pipelinePath.Select(t => t.SharedViewLocationTemplate));
-				tmpViewLocations.Add(_options.Value.DefaultLayoutLocation);
+				tmpViewLocations.AddRange(pipelinePath.SelectMany(t => t.GetSharedViewLocations(context)));
+			    if (!string.IsNullOrEmpty(_options.Value.DefaultLayoutLocation))
+			    {
+			        tmpViewLocations.Add(_options.Value.DefaultLayoutLocation);
+                }
 				viewLocations = tmpViewLocations.Concat(viewLocations).Distinct();
-			}
+            }
 			return viewLocations;
 		}
 	}

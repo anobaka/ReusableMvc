@@ -1,43 +1,57 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using LazyMortal.Multipipeline;
 using LazyMortal.ReusableMvc.Options;
+using LazyMortal.ReusableMvc.Pipelines;
 using LazyMortal.ReusableMvc.Routes;
 using LazyMortal.ReusableMvc.StaticFiles;
 using LazyMortal.ReusableMvc.Views;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 
 namespace LazyMortal.ReusableMvc.Extensions
 {
-	public static class ReusableMvcServiceCollectionExtensions
-	{
-		public static IMvcBuilder AddReusableMvcWithDefaultStaticFiles(this IServiceCollection services,
-			Action<ReusableMvcOptions> reusableMvcOptionsAction = null, Action<MvcOptions> mvcSetupOptions = null)
-		{
-			return services.AddReusableMvc<DefaultStaticFiles, DefaultStaticFilesFactory>(reusableMvcOptionsAction,
-				mvcSetupOptions);
-		}
+    public static class ReusableMvcServiceCollectionExtensions
+    {
+        public static IServiceCollection AddDefaultReusableMvcComponents(this IServiceCollection services,
+            List<IReusablePipeline> reusablePipelines, Action<MultipipelineOptions> multipipelineOptionsAction = null,
+            Action<ReusableMvcOptions> reusableMvcOptionsAction = null)
+        {
+            return services
+                .AddReusableMvcComponents<DefaultStaticFiles, DefaultStaticFilesFactory,
+                    DefaultResuableViewLocationExpander, DefaultReusableRouteHandler>(reusablePipelines,
+                    multipipelineOptionsAction, reusableMvcOptionsAction);
+        }
 
-		public static IMvcBuilder AddReusableMvc<TStaticFiles, TStaticFilesFactory>(this IServiceCollection services,
-			Action<ReusableMvcOptions> reusableMvcOptionsAction = null, Action<MvcOptions> mvcSetupOptions = null)
-			where TStaticFilesFactory : class, IStaticFilesFactory<TStaticFiles> where TStaticFiles : class
-		{
-			services.Configure(reusableMvcOptionsAction ?? (t => { }));
+        public static IServiceCollection AddReusableMvcComponents<TStaticFiles, TStaticFilesFactory,
+            TRusableViewLocationExpander, TReusableRouter>(
+            this IServiceCollection services, IEnumerable<IReusablePipeline> reusablePipelines,
+            Action<MultipipelineOptions> multipipelineOptionsAction = null,
+            Action<ReusableMvcOptions> reusableMvcOptionsAction = null)
+            where TStaticFilesFactory : class, IStaticFilesFactory<TStaticFiles>
+            where TStaticFiles : class
+            where TReusableRouter : class, IReusableRouter
+            where TRusableViewLocationExpander : class, IReusableViewLocationExpander
+        {
+            services.Configure(reusableMvcOptionsAction ?? (t => { }));
 
-			services.AddMultipipeline();
+            services.AddMultipipeline(reusablePipelines, multipipelineOptionsAction);
 
-			services.TryAddSingleton<TStaticFilesFactory>();
-			services.TryAddSingleton<IReusableViewLocationExpander, DefaultResuableViewLocationExpander>();
-			services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-			services.TryAddScoped(t => t.GetRequiredService<TStaticFilesFactory>().Resolve());
-			services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
-			services.TryAddSingleton<IReusableRouter, DefaultReusableRouteHandler>();
+            services.TryAddSingleton<TStaticFilesFactory>();
+            services.TryAddSingleton<IReusableViewLocationExpander, TRusableViewLocationExpander>();
+            services.TryAddScoped(t => t.GetRequiredService<TStaticFilesFactory>().Resolve());
+            services.TryAddSingleton<IReusableRouter, TReusableRouter>();
 
-		    return mvcSetupOptions != null ? services.AddMvc(mvcSetupOptions) : services.AddMvc();
-		}
-	}
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+            return services;
+        }
+    }
 }

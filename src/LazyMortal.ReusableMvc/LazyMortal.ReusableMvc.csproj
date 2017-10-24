@@ -3,34 +3,33 @@
   <PropertyGroup>
     <Description>Reuse controllers, actions, views and static files within one application but different contexts.</Description>
     <AssemblyTitle>LazyMortal.ReusableMvc</AssemblyTitle>
-    <VersionPrefix>0.2.5</VersionPrefix>
-    <Authors>Derrick</Authors>
+    <Authors>Jax</Authors>
     <TargetFramework>netstandard1.6</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>LazyMortal.ReusableMvc</AssemblyName>
     <PackageId>LazyMortal.ReusableMvc</PackageId>
-    <PackageTags>.net core;mvc;reuse;reusable</PackageTags>
-    <RepositoryType>git</RepositoryType>
+    <PackageTags>.net core;mvc;reuse;reusable;multipipeline</PackageTags>
+    <RepositoryType>github</RepositoryType>
     <RepositoryUrl>https://github.com/LazyMortal/ReusableMvc</RepositoryUrl>
     <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <Version>0.2.5</Version>
+    <Version>0.3.0-beta</Version>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageReleaseNotes>Change return types of methods in `ServiceCollection` Extensions from `IServiceCollection` to `IMvcBuilder`</PackageReleaseNotes>
+    <PackageReleaseNotes>Redesign</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="LazyMortal.Multipipeline" Version="0.0.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="1.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="1.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Routing" Version="1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor" Version="1.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="1.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Routing" Version="1.1.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="1.1.0" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.6' ">
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="1.1.1" />
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Multipipeline\src\LazyMortal.Multipipeline\LazyMortal.Multipipeline.csproj" />
   </ItemGroup>
 
 </Project>

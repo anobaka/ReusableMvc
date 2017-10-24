@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using LazyMortal.Multipipeline;
 using LazyMortal.ReusableMvc.Extensions;
+using LazyMortal.ReusableMvc.Options;
+using LazyMortal.ReusableMvc.Pipelines;
 using LazyMortal.ReusableMvc.Routes;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,6 +14,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Sample.Web.Models;
 
 namespace Sample.Web
 {
@@ -32,7 +35,18 @@ namespace Sample.Web
 
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddReusableMvcWithDefaultStaticFiles();
+		    var reusableMvcOptions = new ReusableMvcOptions {DefaultStaticFileLocation = null};
+
+		    services.AddDefaultReusableMvcComponents(new List<IReusablePipeline>
+		    {
+		        new APipeline(new ReusablePipelineOptions {Id = "Id-A1", Name = "A1", ParentId = null}, reusableMvcOptions),
+		        new APipeline(new ReusablePipelineOptions {Id = "Id-A2", Name = "A2", ParentId = "Id-A1"},
+		            reusableMvcOptions),
+		        new BPipeline(new ReusablePipelineOptions {Id = "Id-B", Name = "B", ParentId = "Id-A1"}, reusableMvcOptions),
+		        new CPipeline(new ReusablePipelineOptions {Id = "Id-C", Name = "C", ParentId = "Id-B"}, reusableMvcOptions),
+		    });
+
+		    services.AddMvc();
 		}
 
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)

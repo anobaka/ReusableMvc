@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LazyMortal.ReusableMvc.StaticFiles;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Sample.Web.Controllers
 {
+    [NoDefaultStaticFiles(FileTypes = new[] { "js" })]
     public class HomeController : Controller
     {
+        [NoDefaultStaticFiles]
+
         public IActionResult Index()
         {
             return View();
