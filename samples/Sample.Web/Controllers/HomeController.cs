@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using LazyMortal.ReusableMvc.StaticFiles;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Sample.Web.Controllers
 {

@@ -26,60 +26,86 @@ namespace LazyMortal.ReusableMvc.Pipelines
 
         protected static readonly string ProjectBaseNamespace = Assembly.GetEntryAssembly().GetName().Name;
 
-        protected ReusableMvcOptions ReusableMvcOptions;
+        protected ReusablePipelineOptions Options;
 
-        protected ReusablePipeline(ReusablePipelineOptions options, ReusableMvcOptions reusableMvcOptions)
+        protected ReusablePipeline(ReusablePipelineOptions options)
         {
             Id = options.Id;
             ParentId = options.ParentId;
             Name = options.Name;
-            ReusableMvcOptions = reusableMvcOptions;
+            Options = options;
         }
 
         public abstract Task<bool> ResolveAsync(HttpContext ctx);
 
         public abstract Task ConfigurePipeline(IApplicationBuilder app);
 
-        public virtual List<string> GetControllerFullnames(RouteContext routeContext)
+        /// <inheritdoc />
+        /// <summary>
+        /// Default fullname is "{0}.Areas.{1}.Controllers.{2}".
+        /// <para>{0} is for project's base namespace</para>
+        /// <para>{1} is for controller's name trimed end with 'Controller'</para>
+        /// <para>{2} is for pipeline's name</para>
+        /// </summary>
+        /// <param name="routeContext"></param>
+        /// <returns></returns>
+        public virtual string[] GetControllerFullnames(RouteContext routeContext)
         {
             var controllerName = routeContext.RouteData.Values["controller"].ToString();
-            return new List<string> {$"{ProjectBaseNamespace}.Areas.{Name}.Controllers.{controllerName}Controller"};
+            return new[] {$"{ProjectBaseNamespace}.Areas.{Name}.Controllers.{controllerName}Controller"};
         }
 
-        public virtual List<string> GetViewLocations(ViewLocationExpanderContext viewLocationExpanderContext)
+        /// <inheritdoc />
+        /// <summary>
+        /// Default location is "/Views/{1}{2}{0}.cshtml", the "//" will be replaced by "/" if the value is null.
+        /// <para>{0} is for view's name.</para>
+        /// <para>{1} is for controller's name.</para>
+        /// <para>{2} is for pipeline's name.</para>
+        /// </summary>
+        /// <param name="viewLocationExpanderContext"></param>
+        /// <returns></returns>
+        public virtual string[] GetViewLocations(ViewLocationExpanderContext viewLocationExpanderContext)
         {
-            var pipelineName =
-                (viewLocationExpanderContext.ActionContext.HttpContext.GetPipeline() as IReusablePipeline)?.Name;
-            return new List<string> {$"/Views/{{1}}/{pipelineName}/{{0}}.cshtml".Replace("//", "/")};
+            return new[] {$"/Views/{{1}}/{Name}/{{0}}.cshtml".Replace("//", "/")};
         }
 
-        public virtual List<string> GetSharedViewLocations(ViewLocationExpanderContext viewLocationExpanderContext)
+        /// <inheritdoc />
+        /// <summary>
+        /// Default location is "/Views/Shared/{1}/{0}.cshtml".
+        /// <para>{0} is for view's name.</para>
+        /// <para>{1} is for pipeline's name.</para>
+        /// </summary>
+        /// <param name="viewLocationExpanderContext"></param>
+        /// <returns></returns>
+        public virtual string[] GetSharedViewLocations(ViewLocationExpanderContext viewLocationExpanderContext)
         {
-            var pipelineName =
-                (viewLocationExpanderContext.ActionContext.HttpContext.GetPipeline() as IReusablePipeline)?.Name;
-            return new List<string> {$"/Views/Shared/{pipelineName}/{{0}}.cshtml".Replace("//", "/")};
+            return new[] {$"/Views/Shared/{Name}/{{0}}.cshtml".Replace("//", "/")};
         }
 
-        public virtual List<string> GetStaticFilesRelativeLocations(ActionContext actionContext)
+        /// <inheritdoc />
+        /// <summary>
+        /// default location is "{1}/{2}/{0}", the "//" will be replaced by "/" if the value is null.
+        /// <para>{0} is for view's name.</para>
+        /// <para>{1} is for controller's name.</para>
+        /// <para>{2} is for pipeline's name in lower case.</para>
+        /// </summary>
+        /// <param name="actionContext"></param>
+        /// <param name="viewName"></param>
+        /// <returns></returns>
+        public virtual string[] GetStaticFilesRelativeLocations(ActionContext actionContext, string viewName)
         {
             var controllerName = (actionContext.RouteData.Values["controller"] as string)?.ToLower();
-            var viewName = (actionContext.HttpContext.Items[ReusableMvcOptions.ViewNameHttpContextItemKey] as string)
-                ?.ToLower();
-            return new List<string> {$"{controllerName}/{Name}/{viewName}"};
+            return new[] {$"{controllerName}/{Name}/{viewName}"};
         }
     }
 
-    public abstract class ReusablePipeline<TOptions, TMvcOptions> : ReusablePipeline
-        where TOptions : ReusablePipelineOptions where TMvcOptions : ReusableMvcOptions
+    public abstract class ReusablePipeline<TOptions> : ReusablePipeline where TOptions : ReusablePipelineOptions
     {
-        protected ReusablePipeline(TOptions options, TMvcOptions reusableMvcOptions) : base(
-            options, reusableMvcOptions)
+        protected ReusablePipeline(TOptions options) : base(options)
         {
             Options = options;
         }
 
-        protected new TMvcOptions ReusableMvcOptions;
-
-        protected TOptions Options;
+        protected new TOptions Options;
     }
 }

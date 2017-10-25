@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor.Internal;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
@@ -113,7 +115,7 @@ namespace LazyMortal.ReusableMvc.StaticFiles
             {
                 var pipelinePath = _pipelineDecisionTree.GetPipelinePath(pipeline);
                 defaultStaticFileLocations.AddRange(pipelinePath.SelectMany(p =>
-                    p.GetStaticFilesRelativeLocations(actionContext)));
+                    p.GetStaticFilesRelativeLocations(actionContext, viewName)));
             }
             if (!string.IsNullOrEmpty(_options.Value.DefaultStaticFileLocation))
             {

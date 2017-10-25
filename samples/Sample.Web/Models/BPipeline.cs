@@ -9,8 +9,7 @@ namespace Sample.Web.Models
 {
     public class BPipeline : APipeline
     {
-        public BPipeline(ReusablePipelineOptions options, ReusableMvcOptions reusableMvcOptions) : base(options,
-            reusableMvcOptions)
+        public BPipeline(ReusablePipelineOptions options) : base(options)
         {
         }
     }

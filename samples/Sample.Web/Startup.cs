@@ -18,57 +18,56 @@ using Sample.Web.Models;
 
 namespace Sample.Web
 {
-	public class Startup
-	{
-		public Startup(IHostingEnvironment env)
-		{
-			var builder = new ConfigurationBuilder()
-				.SetBasePath(env.ContentRootPath)
-				.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-				.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-				.AddEnvironmentVariables();
+    public class Startup
+    {
+        public Startup(IHostingEnvironment env)
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddEnvironmentVariables();
 
-			Configuration = builder.Build();
-		}
+            Configuration = builder.Build();
+        }
 
-		public IConfigurationRoot Configuration { get; }
+        public IConfigurationRoot Configuration { get; }
 
-		public void ConfigureServices(IServiceCollection services)
-		{
-		    var reusableMvcOptions = new ReusableMvcOptions {DefaultStaticFileLocation = null};
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddMultipipeline(new List<IReusablePipeline>
+            {
+                new APipeline(new ReusablePipelineOptions {Id = "Id-A1", Name = "A1", ParentId = null}),
+                new APipeline(new ReusablePipelineOptions {Id = "Id-A2", Name = "A2", ParentId = "Id-A1"}),
+                new BPipeline(new ReusablePipelineOptions {Id = "Id-B", Name = "B", ParentId = "Id-A1"}),
+                new CPipeline(new ReusablePipelineOptions {Id = "Id-C", Name = "C", ParentId = "Id-B"}),
+            });
 
-		    services.AddDefaultReusableMvcComponents(new List<IReusablePipeline>
-		    {
-		        new APipeline(new ReusablePipelineOptions {Id = "Id-A1", Name = "A1", ParentId = null}, reusableMvcOptions),
-		        new APipeline(new ReusablePipelineOptions {Id = "Id-A2", Name = "A2", ParentId = "Id-A1"},
-		            reusableMvcOptions),
-		        new BPipeline(new ReusablePipelineOptions {Id = "Id-B", Name = "B", ParentId = "Id-A1"}, reusableMvcOptions),
-		        new CPipeline(new ReusablePipelineOptions {Id = "Id-C", Name = "C", ParentId = "Id-B"}, reusableMvcOptions),
-		    });
+            services.AddDefaultReusableMvcComponents();
 
-		    services.AddMvc();
-		}
+            services.AddMvc();
+        }
 
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
-		{
-			loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-			loggerFactory.AddDebug();
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        {
+            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            loggerFactory.AddDebug();
 
-			if (env.IsDevelopment())
-			{
-				app.UseDeveloperExceptionPage();
-				app.UseBrowserLink();
-			}
-			else
-			{
-				app.UseExceptionHandler("/Home/Error");
-			}
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseBrowserLink();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+            }
 
-			app.UseStaticFiles();
+            app.UseStaticFiles();
 
-			app.AddMultipipeline();
+            app.AddMultipipeline();
 
-			app.UseReusableMvcWithDefaultRoute();
-		}
-	}
+            app.UseReusableMvcWithDefaultRoute();
+        }
+    }
 }

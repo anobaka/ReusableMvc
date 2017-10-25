@@ -43,7 +43,6 @@ namespace LazyMortal.ReusableMvc.Routes
 		                t => t.Select(x => (x.AttributeRouteInfo != null
 		                    ? x.AttributeRouteInfo.Template
 		                    : $"{t.Key}/{x.ActionName}").Trim('/')), StringComparer.OrdinalIgnoreCase);
-		    //_projectBaseNameSpace = Assembly.GetEntryAssembly().GetName().Name;
 		}
 
 		/// <summary>

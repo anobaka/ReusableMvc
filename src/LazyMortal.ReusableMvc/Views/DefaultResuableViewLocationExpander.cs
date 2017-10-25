@@ -45,7 +45,7 @@ namespace LazyMortal.ReusableMvc.Views
 		public virtual IEnumerable<string> ExpandViewLocations(ViewLocationExpanderContext context,
 			IEnumerable<string> viewLocations)
 		{
-		    if (context.ActionContext.HttpContext.GetPipeline() is ReusablePipeline pipeline)
+		    if (context.ActionContext.HttpContext.GetPipeline() is IReusablePipeline pipeline)
 			{
 				var pipelinePath = _pipelineDecisionTree.GetPipelinePath(pipeline);
 				//main view

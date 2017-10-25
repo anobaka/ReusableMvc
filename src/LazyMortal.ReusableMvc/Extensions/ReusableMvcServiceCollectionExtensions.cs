@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using LazyMortal.Multipipeline;
 using LazyMortal.ReusableMvc.Options;
 using LazyMortal.ReusableMvc.Pipelines;
@@ -20,18 +21,17 @@ namespace LazyMortal.ReusableMvc.Extensions
     public static class ReusableMvcServiceCollectionExtensions
     {
         public static IServiceCollection AddDefaultReusableMvcComponents(this IServiceCollection services,
-            List<IReusablePipeline> reusablePipelines, Action<MultipipelineOptions> multipipelineOptionsAction = null,
+            Action<MultipipelineOptions> multipipelineOptionsAction = null,
             Action<ReusableMvcOptions> reusableMvcOptionsAction = null)
         {
             return services
                 .AddReusableMvcComponents<DefaultStaticFiles, DefaultStaticFilesFactory,
-                    DefaultResuableViewLocationExpander, DefaultReusableRouteHandler>(reusablePipelines,
-                    multipipelineOptionsAction, reusableMvcOptionsAction);
+                    DefaultResuableViewLocationExpander, DefaultReusableRouteHandler>(multipipelineOptionsAction,
+                    reusableMvcOptionsAction);
         }
 
         public static IServiceCollection AddReusableMvcComponents<TStaticFiles, TStaticFilesFactory,
-            TRusableViewLocationExpander, TReusableRouter>(
-            this IServiceCollection services, IEnumerable<IReusablePipeline> reusablePipelines,
+            TRusableViewLocationExpander, TReusableRouter>(this IServiceCollection services,
             Action<MultipipelineOptions> multipipelineOptionsAction = null,
             Action<ReusableMvcOptions> reusableMvcOptionsAction = null)
             where TStaticFilesFactory : class, IStaticFilesFactory<TStaticFiles>
@@ -40,8 +40,6 @@ namespace LazyMortal.ReusableMvc.Extensions
             where TRusableViewLocationExpander : class, IReusableViewLocationExpander
         {
             services.Configure(reusableMvcOptionsAction ?? (t => { }));
-
-            services.AddMultipipeline(reusablePipelines, multipipelineOptionsAction);
 
             services.TryAddSingleton<TStaticFilesFactory>();
             services.TryAddSingleton<IReusableViewLocationExpander, TRusableViewLocationExpander>();

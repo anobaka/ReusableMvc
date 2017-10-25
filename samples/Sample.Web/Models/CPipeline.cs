@@ -24,8 +24,7 @@ namespace Sample.Web.Models
             return TaskCache.CompletedTask;
         }
 
-        public CPipeline(ReusablePipelineOptions options, ReusableMvcOptions reusableMvcOptions) : base(options,
-            reusableMvcOptions)
+        public CPipeline(ReusablePipelineOptions options) : base(options)
         {
         }
     }
