@@ -68,6 +68,7 @@ namespace Sample.Web
             app.AddMultipipeline();
 
             app.UseReusableMvcWithDefaultRoute();
+            //app.UseMvcWithDefaultRoute();
         }
     }
 }

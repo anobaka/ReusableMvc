@@ -3,7 +3,7 @@
 namespace Sample.Web.Areas.A.Controllers
 {
     [Area("a")]
-    [Route("a/[controller]")]
+    [Route("[area]/[controller]")]
     public class HomeController : Controller
     {
         [HttpGet("bbb")]

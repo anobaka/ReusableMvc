@@ -36,6 +36,16 @@ namespace LazyMortal.ReusableMvc.Pipelines
             Options = options;
         }
 
+        //public virtual void ChangeRouteDataToLocatedAction(RouteContext context)
+        //{
+
+        //}
+
+        //public virtual void RestoreRouteDataAfterActionLocating(RouteContext routeContext)
+        //{
+            
+        //}
+
         public abstract Task<bool> ResolveAsync(HttpContext ctx);
 
         public abstract Task ConfigurePipeline(IApplicationBuilder app);

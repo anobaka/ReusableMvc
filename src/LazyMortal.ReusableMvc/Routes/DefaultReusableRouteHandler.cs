@@ -20,7 +20,7 @@ namespace LazyMortal.ReusableMvc.Routes
 	public class DefaultReusableRouteHandler : IReusableRouter
 	{
 		private readonly IRouter _target;
-		private readonly IDictionary<string, IEnumerable<string>> _controllerActionUris;
+		private readonly IDictionary<string, IEnumerable<string>> _controllerActions;
 		private readonly PipelineDecisionTree _pipelineDecisionTree;
 		//private readonly string _projectBaseNameSpace;
 		private readonly IOptions<ReusableMvcOptions> _options;
@@ -36,21 +36,26 @@ namespace LazyMortal.ReusableMvc.Routes
 			_target = target;
 			_pipelineDecisionTree = pipelineDecisionTree;
 			_options = options;
-		    _controllerActionUris =
-		        actionProvider.ActionDescriptors.Items.Cast<ControllerActionDescriptor>()
-		            .GroupBy(t => t.ControllerTypeInfo.FullName)
-		            .ToDictionary(t => t.Key,
-		                t => t.Select(x => (x.AttributeRouteInfo != null
-		                    ? x.AttributeRouteInfo.Template
-		                    : $"{t.Key}/{x.ActionName}").Trim('/')), StringComparer.OrdinalIgnoreCase);
-		}
+            //_controllerActionUris =
+            //    actionProvider.ActionDescriptors.Items.Cast<ControllerActionDescriptor>()
+            //        .GroupBy(t => t.ControllerTypeInfo.FullName)
+            //        .ToDictionary(t => t.Key,
+            //            t => t.Select(x => (x.AttributeRouteInfo != null
+            //                ? x.AttributeRouteInfo.Template
+            //                : $"{x.ControllerName}/{x.ActionName}").Trim('/')), StringComparer.OrdinalIgnoreCase);
+            _controllerActions =
+                actionProvider.ActionDescriptors.Items.Cast<ControllerActionDescriptor>()
+                    .GroupBy(t => t.ControllerTypeInfo.FullName)
+                    .ToDictionary(t => t.Key,
+                        t => t.Select(x => x.ActionName), StringComparer.OrdinalIgnoreCase);
+        }
 
-		/// <summary>
-		/// todo: 暂时不支持跨层级调用/Attribute路由
-		/// </summary>
-		/// <param name="context"></param>
-		/// <returns></returns>
-		public virtual Task RouteAsync(RouteContext context)
+        /// <summary>
+        /// Change the route values temporarily if current url meets the rules of parents of current pipeline for locating the action, and restore them after.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public virtual Task RouteAsync(RouteContext context)
 		{
 			var pipeline = context.HttpContext.GetPipeline() as ReusablePipeline;
 			if (pipeline != null)
@@ -77,12 +82,13 @@ namespace LazyMortal.ReusableMvc.Routes
 
 		public virtual void ChangeRouteDataToLocatedAction(RouteContext context, ReusablePipeline pipeline)
 		{
-		    var uri = context.HttpContext.Request.Path.Value.Trim('/');
+		    //var uri = context.HttpContext.Request.Path.Value.Trim('/');
 			var controllerName = context.RouteData.Values["controller"].ToString();
+		    var actionName = context.RouteData.Values["action"].ToString();
 			var targetPipeline = _pipelineActions.GetOrAdd(pipeline,
 					t => new ConcurrentDictionary<string, ConcurrentDictionary<string, IPipeline>>(StringComparer.OrdinalIgnoreCase))
 				.GetOrAdd(controllerName, t => new ConcurrentDictionary<string, IPipeline>(StringComparer.OrdinalIgnoreCase))
-				.GetOrAdd(uri, t1 =>
+				.GetOrAdd(actionName, t1 =>
 				{
 					var pipelinePath = _pipelineDecisionTree.GetPipelinePath(pipeline);
 					foreach (var p in pipelinePath)
@@ -90,9 +96,9 @@ namespace LazyMortal.ReusableMvc.Routes
 						var fullControllerNames = p.GetControllerFullnames(context);
 					    foreach (var fullControllerName in fullControllerNames)
 					    {
-					        if (_controllerActionUris.TryGetValue(fullControllerName, out var uris))
+					        if (_controllerActions.TryGetValue(fullControllerName, out var actions))
 					        {
-					            if (uris.Contains(uri, StringComparer.OrdinalIgnoreCase))
+					            if (actions.Contains(actionName, StringComparer.OrdinalIgnoreCase))
 					            {
 					                return p;
 					            }
@@ -101,6 +107,7 @@ namespace LazyMortal.ReusableMvc.Routes
 					}
 					return null;
 				});
+            //todo: set route data values by pipeline self.
 			if (string.IsNullOrEmpty(targetPipeline?.Name))
 			{
 				context.RouteData.Values.Remove(_options.Value.PipelineNameRouteDataKey);
@@ -113,7 +120,8 @@ namespace LazyMortal.ReusableMvc.Routes
 
 		public virtual void RestoreRouteData(RouteContext context, ReusablePipeline pipeline)
 		{
-			context.RouteData.Values[_options.Value.PipelineNameRouteDataKey] = pipeline.Name.ToLower();
+		    //todo: set route data values by pipeline self.
+            context.RouteData.Values[_options.Value.PipelineNameRouteDataKey] = pipeline.Name.ToLower();
 		}
 	}
 }
