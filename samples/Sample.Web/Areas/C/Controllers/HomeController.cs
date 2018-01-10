@@ -3,6 +3,7 @@
 namespace Sample.Web.Areas.C.Controllers
 {
     [Area("c")]
+    [Route("[controller]/[action]")]
     public class HomeController : Controller
     {
         public IActionResult Index()
@@ -16,7 +17,6 @@ namespace Sample.Web.Areas.C.Controllers
 
             return View();
         }
-
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";

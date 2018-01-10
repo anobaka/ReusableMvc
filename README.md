@@ -122,7 +122,7 @@ You can change the location template by setting `GetStaticFilesRelativeLocations
 3. You can use more than one candidates to try to locate the resources in one request(scope).
 3. You can define all types of static files in `DefaultStaticFiles`.
 4. You can use `NoDefaultStaticFilesAttribute` on Controller/Action to ignore some static files.
-4. The router respects **route values** now.
+4. ~~The router respects **route values** now.~~
 6. `ReusablePipeline` to `IReusablePipeline`, and `ReusablePipeline` is for quick start, which is not standard `IReusablePipeline` in fact.
 
 ### 0.2.4

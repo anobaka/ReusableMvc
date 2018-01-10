@@ -49,7 +49,7 @@ namespace LazyMortal.ReusableMvc.Views
 			{
 				var pipelinePath = _pipelineDecisionTree.GetPipelinePath(pipeline);
 				//main view
-				var tmpViewLocations = pipelinePath.SelectMany(p => p.GetSharedViewLocations(context)).ToList();
+				var tmpViewLocations = pipelinePath.SelectMany(p => p.GetViewLocations(context)).ToList();
 			    if (!string.IsNullOrEmpty(_options.Value.DefaultViewLocation))
 			    {
 			        tmpViewLocations.Add(_options.Value.DefaultViewLocation);

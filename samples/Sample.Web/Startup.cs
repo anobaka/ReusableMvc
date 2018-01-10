@@ -42,7 +42,6 @@ namespace Sample.Web
                 new BPipeline(new ReusablePipelineOptions {Id = "Id-B", Name = "B", ParentId = "Id-A1"}),
                 new CPipeline(new ReusablePipelineOptions {Id = "Id-C", Name = "C", ParentId = "Id-B"}),
             });
-
             services.AddDefaultReusableMvcComponents();
 
             services.AddMvc();
