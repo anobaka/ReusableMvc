@@ -19,5 +19,11 @@ namespace LazyMortal.ReusableMvc.StaticFiles
             }
             return null;
         }
+
+        public virtual string GetPath(string fileType)
+        {
+            fileType = fileType.ToLower();
+            return TryGetValue(fileType, out var path) ? path : null;
+        }
     }
 }
